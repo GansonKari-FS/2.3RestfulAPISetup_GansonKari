@@ -1,3 +1,5 @@
+const Author = require("../model/Author");
+
 const getAllAuthors = (req, res) => {
   res.status(200).json({
     success: true,
@@ -50,4 +52,3 @@ module.exports = {
 //can also put exports in front of each function instead of exporting at the end like above
 // exports.getAllAuthors = (req, res) => {
 //   res.status(200).json({
-
