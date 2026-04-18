@@ -1,13 +1,20 @@
 const express = require("express");
 const app = express();
-const routeHandler = require("./routes/index");
+const routeHandler = require("./routes");
 
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.status(200).json({ message: "API is running" });
+  res.status(200).json({ message: "API is running", sucess: true });
 });
 
-app.use("/api/v1/authors", routeHandler);
+// 🔥 ADD THIS PART
+const PORT = 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}`);
+});
+
+app.use("/api/v1", routeHandler);
 
 module.exports = app;

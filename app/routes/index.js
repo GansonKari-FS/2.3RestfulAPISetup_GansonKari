@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const authorRoutes = require("./authorRoutes.js");
 
 // GET ALL authors
 // URL: http://localhost:3000/api/v1/authors
@@ -95,5 +96,8 @@ router.delete("/:id", (req, res) => {
     message: `Author with id ${id} deleted`,
   });
 });
+
+// Use author routes
+router.use("/authors", authorRoutes);
 
 module.exports = router;
