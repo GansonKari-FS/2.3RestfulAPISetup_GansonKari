@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const authorRoutes = require("./authorRoutes.js");
 
 // GET ALL authors
 // URL: http://localhost:3000/api/v1/authors
-router.get("/", (req, res) => {
+router.get("/authors", (req, res) => {
   const authors = [
     { id: 1, name: "J.K. Rowling" },
     { id: 2, name: "Stephen King" },
@@ -20,7 +19,7 @@ router.get("/", (req, res) => {
 
 // GET author by ID
 // URL: http://localhost:3000/api/v1/authors/1
-router.get("/:id", (req, res) => {
+router.get("/authors/:id", (req, res) => {
   const authors = [
     { id: 1, name: "J.K. Rowling" },
     { id: 2, name: "Stephen King" },
@@ -45,7 +44,7 @@ router.get("/:id", (req, res) => {
 
 // POST create new author
 // URL: http://localhost:3000/api/v1/authors
-router.post("/", (req, res) => {
+router.post("/authors", (req, res) => {
   const { name } = req.body;
 
   if (!name) {
@@ -68,7 +67,7 @@ router.post("/", (req, res) => {
 
 // PUT update author
 // URL: http://localhost:3000/api/v1/authors/1
-router.put("/:id", (req, res) => {
+router.put("/authors/:id", (req, res) => {
   const { name } = req.body;
   const id = parseInt(req.params.id);
 
@@ -88,7 +87,7 @@ router.put("/:id", (req, res) => {
 
 // DELETE author
 // URL: http://localhost:3000/api/v1/authors/1
-router.delete("/:id", (req, res) => {
+router.delete("/authors/:id", (req, res) => {
   const id = parseInt(req.params.id);
 
   res.status(200).json({
@@ -96,8 +95,5 @@ router.delete("/:id", (req, res) => {
     message: `Author with id ${id} deleted`,
   });
 });
-
-// Use author routes
-router.use("/authors", authorRoutes);
 
 module.exports = router;

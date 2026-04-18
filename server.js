@@ -1,16 +1,19 @@
 require("dotenv").config();
 const app = require("./app/app");
-const routeHandler = require("./app/routes");
-const connectDB = require("./app/routes/db/config.js");
+const connectDB = require("./app/db/config.js");
 
 const PORT = process.env.PORT || 3000;
 
-connectDB();
+const startServer = async () => {
+  try {
+    await connectDB();
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+    app.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error(error);
+  }
+};
 
-app.use("/api/v1", routeHandler);
-
-module.exports = app;
+startServer();
