@@ -17,6 +17,8 @@ const getAuthorById = (req, res) => {
 };
 
 const createAuthor = (req, res) => {
+  const data = req.body;
+  console.log("data >>>", data);
   res.status(200).json({
     success: true,
     message: `${req.method} - Request to Author endpoint`,
