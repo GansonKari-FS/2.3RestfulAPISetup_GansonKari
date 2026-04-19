@@ -1,9 +1,11 @@
 const Author = require("../model/Author");
 
-const getAllAuthors = (req, res) => {
+const getAllAuthors = async (req, res) => {
+  const authors = await Author.find();
   res.status(200).json({
     success: true,
     message: `${req.method} - Request made`,
+    data: authors,
   });
 };
 
@@ -18,9 +20,9 @@ const getAuthorById = (req, res) => {
 
 const createAuthor = async (req, res) => {
   const { author } = req.body;
-  console.log("data >>>", author);
 
-  await Authors.create(author);
+  const newAuthor = await Authors.create(author);
+  console.log("newAuthor >>>", newAuthor);
 
   res.status(200).json({
     success: true,
@@ -28,12 +30,14 @@ const createAuthor = async (req, res) => {
   });
 };
 
-const updateAuthor = (req, res) => {
+const updateAuthor = async (req, res) => {
   const { id } = req.params;
-  const { author } = req.body;
+  const { author } = await Author.findByIdAndUpdate(id, req.body, {
+    new: true,
+  });
   console.log("data >>>", author);
   res.status(200).json({
-    id,
+    data: author,
     success: true,
     message: `${req.method} - Request to Author endpoint`,
   });
