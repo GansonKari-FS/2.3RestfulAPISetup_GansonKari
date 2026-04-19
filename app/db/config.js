@@ -2,15 +2,16 @@ const mongoose = require("mongoose");
 
 const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
-      useUnifiedTopology: true,
-    });
+    if (!process.env.MONGODB_URI) {
+      throw new Error("MONGODB_URI is not defined in .env file");
+    }
 
-    console.log(
-      `Connected to the MongoDB successfully! ${conn.connection.host}`,
-    );
+    const conn = await mongoose.connect(process.env.MONGODB_URI);
+
+    console.log(`MongoDB Connected Successfully: ${conn.connection.host}`);
   } catch (error) {
-    console.log(error);
+    console.error("Database connection failed >>>", error.message);
+    process.exit(1); // stop the app if DB fails
   }
 };
 
