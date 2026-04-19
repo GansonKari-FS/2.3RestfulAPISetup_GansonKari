@@ -1,55 +1,140 @@
 const Author = require("../model/Author");
 
 const getAllAuthors = async (req, res) => {
-  const authors = await Author.find();
-  res.status(200).json({
-    success: true,
-    message: `${req.method} - Request made`,
-    data: authors,
-  });
+  try {
+    const authors = await Author.find();
+
+    res.status(200).json({
+      success: true,
+      message: `${req.method} - Request made`,
+      data: authors,
+    });
+  } catch (error) {
+    console.error("Get All Authors Error >>>", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error,
+    });
+  }
 };
 
-const getAuthorById = (req, res) => {
-  const { id } = req.params;
-  res.status(200).json({
-    id,
-    success: true,
-    message: `${req.method} - Request to Author endpoint`,
-  });
+const getAuthorById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const author = await Author.findById(id);
+
+    if (!author) {
+      return res.status(404).json({
+        success: false,
+        message: "Author not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `${req.method} - Request to Author endpoint`,
+      data: author,
+    });
+  } catch (error) {
+    console.error("Get Author By ID Error >>>", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error,
+    });
+  }
 };
 
 const createAuthor = async (req, res) => {
-  const { author } = req.body;
+  try {
+    const { author } = req.body;
 
-  const newAuthor = await Authors.create(author);
-  console.log("newAuthor >>>", newAuthor);
+    const newAuthor = await Author.create(author);
+    console.log("newAuthor >>>", newAuthor);
 
-  res.status(200).json({
-    success: true,
-    message: `${req.method} - Request to Author endpoint`,
-  });
+    res.status(201).json({
+      success: true,
+      message: `${req.method} - Author created`,
+      data: newAuthor,
+    });
+  } catch (error) {
+    if (error.name === "ValidationError") {
+      console.error("Validation Error >>>", error);
+      return res.status(422).json({
+        success: false,
+        message: "Validation error",
+        error,
+      });
+    }
+
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error,
+    });
+  }
 };
 
 const updateAuthor = async (req, res) => {
-  const { id } = req.params;
-  const { author } = await Author.findByIdAndUpdate(id, req.body, {
-    new: true,
-  });
-  console.log("data >>>", author);
-  res.status(200).json({
-    data: author,
-    success: true,
-    message: `${req.method} - Request to Author endpoint`,
-  });
+  try {
+    const { id } = req.params;
+
+    const author = await Author.findByIdAndUpdate(id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    if (!author) {
+      return res.status(404).json({
+        success: false,
+        message: "Author not found",
+      });
+    }
+
+    console.log("data >>>", author);
+
+    res.status(200).json({
+      data: author,
+      success: true,
+      message: `${req.method} - Author updated`,
+    });
+  } catch (error) {
+    console.error("Update Author Error >>>", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error,
+    });
+  }
 };
 
-const deleteAuthor = (req, res) => {
-  const { id } = req.params;
-  res.status(200).json({
-    id,
-    success: true,
-    message: `${req.method} - author deleted`,
-  });
+const deleteAuthor = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const author = await Author.findByIdAndDelete(id);
+
+    if (!author) {
+      return res.status(404).json({
+        success: false,
+        message: "Author not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: `${req.method} - author deleted`,
+      data: author,
+    });
+  } catch (error) {
+    console.error("Delete Author Error >>>", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error",
+      error,
+    });
+  }
 };
 
 module.exports = {
@@ -59,7 +144,3 @@ module.exports = {
   updateAuthor,
   deleteAuthor,
 };
-
-//can also put exports in front of each function instead of exporting at the end like above
-// exports.getAllAuthors = (req, res) => {
-//   res.status(200).json({

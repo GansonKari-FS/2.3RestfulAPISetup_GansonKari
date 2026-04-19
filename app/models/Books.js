@@ -28,9 +28,11 @@ const bookSchema = new mongoose.Schema(
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Author",
+      unique: true,
     },
   },
 
+  // will add timestamps to your recors in mongodb
   { timestamps: true },
 );
 
